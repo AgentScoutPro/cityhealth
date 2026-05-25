@@ -1,12 +1,11 @@
+import { useState } from 'react'
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer,
 } from 'recharts'
-import { PDFDownloadLink } from '@react-pdf/renderer'
 import { useAuditMeta } from '../../hooks/useAudit'
 import ScoreRing from '../ScoreRing'
 import MetricCard from '../MetricCard'
-import { ClientReportPDF } from '../ClientReportPDF'
 import {
   Loader2, AlertCircle, AlertTriangle, Globe, CalendarDays,
   ChevronRight, BarChart3, MousePointerClick, Eye, Search,
@@ -118,6 +117,29 @@ export default function OverviewTab() {
     scoreLabel,
     findings:   data.key_findings ?? [],
     snapshot:   SNAPSHOT_METRICS,
+  }
+
+  const [pdfLoading, setPdfLoading] = useState(false)
+
+  async function handleDownloadPDF() {
+    setPdfLoading(true)
+    try {
+      const [{ pdf }, { ClientReportPDF }] = await Promise.all([
+        import('@react-pdf/renderer'),
+        import('../ClientReportPDF'),
+      ])
+      const blob = await pdf(<ClientReportPDF {...pdfProps} />).toBlob()
+      const url  = URL.createObjectURL(blob)
+      const a    = document.createElement('a')
+      a.href     = url
+      a.download = `cod3ai-seo-report-${(data.site_url ?? 'report').replace(/[^a-z0-9]/gi, '-').toLowerCase()}.pdf`
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch (err) {
+      console.error('PDF generation failed:', err)
+    } finally {
+      setPdfLoading(false)
+    }
   }
 
   return (
@@ -328,25 +350,22 @@ export default function OverviewTab() {
           <p className="text-[12px] font-semibold text-text/70">Client-ready PDF report</p>
           <p className="text-[11px] text-muted/50">Baseline vs. current · branded COD3AI layout</p>
         </div>
-        <PDFDownloadLink
-          document={<ClientReportPDF {...pdfProps} />}
-          fileName={`cod3ai-seo-report-${(data.site_url ?? 'report').replace(/[^a-z0-9]/gi, '-').toLowerCase()}.pdf`}
+        <button
+          onClick={handleDownloadPDF}
+          disabled={pdfLoading}
+          className={`
+            inline-flex items-center gap-2.5 px-4 py-2.5 rounded-card border
+            text-[13px] font-semibold transition-all duration-150 select-none
+            ${pdfLoading
+              ? 'border-neutral-800 bg-surface text-muted/50 cursor-wait'
+              : 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400 cursor-pointer hover:bg-emerald-500/18 hover:border-emerald-500/50 shadow-[0_1px_3px_rgba(0,0,0,0.4),0_0_14px_rgba(52,211,153,0.06)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.5),0_0_22px_rgba(52,211,153,0.12)]'}
+          `}
         >
-          {({ loading: pdfLoading }) => (
-            <div className={`
-              inline-flex items-center gap-2.5 px-4 py-2.5 rounded-card border
-              text-[13px] font-semibold transition-all duration-150 select-none cursor-pointer
-              ${pdfLoading
-                ? 'border-neutral-800 bg-surface text-muted/50 cursor-wait'
-                : 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/18 hover:border-emerald-500/50 shadow-[0_1px_3px_rgba(0,0,0,0.4),0_0_14px_rgba(52,211,153,0.06)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.5),0_0_22px_rgba(52,211,153,0.12)]'}
-            `}>
-              {pdfLoading
-                ? <Loader2 size={14} className="animate-spin" />
-                : <Download size={14} />}
-              {pdfLoading ? 'Generating…' : 'Download Client PDF Report'}
-            </div>
-          )}
-        </PDFDownloadLink>
+          {pdfLoading
+            ? <Loader2 size={14} className="animate-spin" />
+            : <Download size={14} />}
+          {pdfLoading ? 'Generating…' : 'Download Client PDF Report'}
+        </button>
       </div>
 
     </div>
