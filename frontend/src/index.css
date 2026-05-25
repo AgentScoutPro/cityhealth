@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── COD3AI Design Tokens ──────────────────────────────────────── */
+:root {
+  --color-bg:         #0c0e14;
+  --color-surface:    #13161f;
+  --color-surface2:   #1c2030;
+  --color-border:     #252a3d;
+  --color-text:       #e8eaf6;
+  --color-muted:      #8b90b0;
+  --color-accent:     #39ff14;
+  --color-accent-dim: rgba(57, 255, 20, 0.12);
+  --color-accent2:    #00d4aa;
+  --color-danger:     #ff4d6d;
+  --color-warning:    #ff9f43;
+  --color-caution:    #ffd60a;
+  --color-success:    #2dd4b0;
+  --color-brand:      #4e5a6d;
+
+  --radius:    12px;
+  --radius-sm: 8px;
+}
+
+/* ── Base ──────────────────────────────────────────────────────── */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Scrollbar ─────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-muted); }
+
+/* ── Code blocks ───────────────────────────────────────────────── */
+.code-block {
+  background: #0d1117;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.7;
+  overflow-x: auto;
+  white-space: pre;
+  color: #c9d1d9;
+}
+.code-kw  { color: #ff79c6; }
+.code-str { color: #f1fa8c; }
+.code-key { color: #8be9fd; }
+.code-num { color: #bd93f9; }
+.code-cmt { color: #6272a4; font-style: italic; }
+
+/* ── Priority dot animation ────────────────────────────────────── */
+.dot-critical { animation: pulse-red 2s infinite; }
+@keyframes pulse-red {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 77, 109, 0.5); }
+  50%       { box-shadow: 0 0 0 4px rgba(255, 77, 109, 0); }
+}

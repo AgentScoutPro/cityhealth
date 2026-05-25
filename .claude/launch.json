@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "seo-dashboard",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "/Users/cod3ai/SEO REPORT CITY HEALTH/frontend",
+      "port": 5173
+    }
+  ]
+}
