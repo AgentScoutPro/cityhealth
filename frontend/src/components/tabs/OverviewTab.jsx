@@ -89,6 +89,7 @@ function TrafficTooltip({ active, payload, label }) {
 
 export default function OverviewTab() {
   const { data, summary, loading, error } = useAuditMeta()
+  const [pdfLoading, setPdfLoading] = useState(false)
 
   if (loading) return (
     <div className="flex items-center gap-2 text-muted text-sm pt-2">
@@ -118,8 +119,6 @@ export default function OverviewTab() {
     findings:   data.key_findings ?? [],
     snapshot:   SNAPSHOT_METRICS,
   }
-
-  const [pdfLoading, setPdfLoading] = useState(false)
 
   async function handleDownloadPDF() {
     setPdfLoading(true)
