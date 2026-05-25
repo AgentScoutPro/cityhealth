@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { ChevronDown, ChevronRight, Wrench } from 'lucide-react'
 
-const IMPACT_STYLES = {
-  High:   'bg-danger/15 text-danger border border-danger/30',
-  Medium: 'bg-warning/15 text-warning border border-warning/30',
-  Low:    'bg-caution/15 text-caution border border-caution/30',
+const PRIORITY_STYLES = {
+  critical: 'bg-red-500/15 text-red-400 border border-red-500/30',
+  high:     'bg-orange-500/15 text-orange-400 border border-orange-500/30',
+  medium:   'bg-amber-400/15 text-amber-400 border border-amber-400/30',
+  low:      'bg-neutral-500/15 text-neutral-400 border border-neutral-500/30',
 }
 
 export default function IssueCard({ issue }) {
@@ -19,27 +20,27 @@ export default function IssueCard({ issue }) {
       >
         <ChevronIcon size={15} className="text-muted shrink-0" />
         <span className="flex-1 text-sm font-semibold">{issue.title}</span>
-        <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full shrink-0 ${IMPACT_STYLES[issue.impact] || IMPACT_STYLES.Low}`}>
-          {issue.impact}
+        <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full capitalize shrink-0 ${PRIORITY_STYLES[issue.priority] || PRIORITY_STYLES.low}`}>
+          {issue.priority}
         </span>
       </button>
 
       {open && (
-        <div className="px-4 pb-4 space-y-2 border-t border-neutral-800">
-          {issue.description && (
-            <p className="text-sm text-muted mt-3">{issue.description}</p>
+        <div className="px-4 pb-4 space-y-2.5 border-t border-neutral-800">
+          {issue.impact && (
+            <p className="text-sm text-muted mt-3 leading-relaxed">{issue.impact}</p>
           )}
-          {issue.recommendation && (
+          {issue.fix && (
             <div className="bg-surface2 border border-neutral-800 rounded-card p-3">
-              <div className="flex items-center gap-1.5 mb-1">
+              <div className="flex items-center gap-1.5 mb-1.5">
                 <Wrench size={11} className="text-accent" />
                 <p className="text-[11px] font-bold uppercase tracking-wider text-accent">Fix</p>
               </div>
-              <p className="text-sm text-text">{issue.recommendation}</p>
+              <p className="text-sm text-text leading-relaxed">{issue.fix}</p>
             </div>
           )}
           {issue.evidence && (
-            <p className="text-[12px] text-muted italic">{issue.evidence}</p>
+            <p className="text-[12px] text-muted/70 italic border-l-2 border-neutral-700 pl-3">{issue.evidence}</p>
           )}
         </div>
       )}
