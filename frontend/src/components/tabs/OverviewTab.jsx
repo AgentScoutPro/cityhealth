@@ -112,7 +112,7 @@ export default function OverviewTab() {
 
   const pdfProps = {
     siteUrl:    data.site_url,
-    auditDate:  new Date(data.audited_at).toLocaleDateString(),
+    auditDate:  new Date(data.audit_date).toLocaleDateString(),
     score:      data.score,
     scoreLabel,
     findings:   data.key_findings ?? [],
@@ -156,7 +156,7 @@ export default function OverviewTab() {
             </span>
             <span className="inline-flex items-center gap-1.5 text-[11px] text-muted bg-surface border border-neutral-800 rounded-full px-2.5 py-1 shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
               <CalendarDays size={10} className="shrink-0 opacity-60" />
-              Audited {new Date(data.audited_at).toLocaleDateString()}
+              Audited {new Date(data.audit_date).toLocaleDateString()}
             </span>
           </div>
         </div>

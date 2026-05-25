@@ -1,4 +1,21 @@
-import { useState } from 'react'
+import { useState, Component } from 'react'
+
+class ErrorBoundary extends Component {
+  state = { error: null }
+  static getDerivedStateFromError(error) { return { error } }
+  render() {
+    if (this.state.error) return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-bg text-muted gap-3">
+        <p className="text-sm font-semibold text-red-400">Something went wrong</p>
+        <p className="text-xs text-muted/60 max-w-sm text-center">{this.state.error?.message}</p>
+        <button onClick={() => this.setState({ error: null })} className="text-xs px-3 py-1.5 rounded border border-neutral-800 hover:bg-surface mt-2">
+          Retry
+        </button>
+      </div>
+    )
+    return this.props.children
+  }
+}
 import {
   LayoutDashboard,
   Settings2,
@@ -61,11 +78,15 @@ export default function App() {
   const TabComponent = TAB_COMPONENTS[activeTab] || OverviewTab
 
   return (
-    <div className="flex min-h-screen bg-bg text-text">
-      <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
-      <main className="flex-1 overflow-y-auto p-6">
-        <TabComponent />
-      </main>
-    </div>
+    <ErrorBoundary>
+      <div className="flex min-h-screen bg-bg text-text">
+        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
+        <main className="flex-1 overflow-y-auto p-6">
+          <ErrorBoundary>
+            <TabComponent />
+          </ErrorBoundary>
+        </main>
+      </div>
+    </ErrorBoundary>
   )
 }

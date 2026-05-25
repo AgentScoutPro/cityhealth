@@ -9,7 +9,16 @@ export function useAuditMeta() {
 
   useEffect(() => {
     Promise.all([api.getAudit(), api.getSummary()])
-      .then(([audit, sum]) => { setData(audit); setSummary(sum) })
+      .then(([audit, sum]) => {
+        setData(audit)
+        // Transform {critical,high,medium,low,passing} into MetricCard array
+        setSummary([
+          { label: 'Critical Issues', value: sum.critical, sub: 'Immediate action needed', color: 'text-red-400',     trendDir: 'down'    },
+          { label: 'High Issues',     value: sum.high,     sub: 'High priority fixes',     color: 'text-orange-400', trendDir: 'down'    },
+          { label: 'Medium Issues',   value: sum.medium,   sub: 'Standard fixes needed',   color: 'text-amber-400',  trendDir: 'neutral' },
+          { label: 'Passing Checks',  value: sum.passing,  sub: 'Implemented correctly',   color: 'text-emerald-400',trendDir: 'up'      },
+        ])
+      })
       .catch(setError)
       .finally(() => setLoading(false))
   }, [])
